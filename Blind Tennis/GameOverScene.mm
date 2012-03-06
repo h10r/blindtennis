@@ -77,6 +77,13 @@
         [self addChild:_label];
         
         self.isTouchEnabled = YES;
+        
+        stillWaiting = true;
+        
+        [self runAction:[CCSequence actions:
+						 [CCDelayTime actionWithDuration:1],
+						 [CCCallFunc actionWithTarget:self selector:@selector(waitingOver)],
+						 nil]];
 	}	
 	return self;
 }
@@ -136,13 +143,19 @@
     
 }
 
+-(void)waitingOver {
+    stillWaiting = false;
+}
+
 - (void)gameOverDone {
 	[[CCDirector sharedDirector] replaceScene:[CCTransitionSlideInT transitionWithDuration:0.5f scene:[GameScene scene]]];
 }
 
-- (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    CCLOG(@"Touched, gameOverDone");
-    [self gameOverDone]; 
+- (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    //CCLOG(@"Touched, gameOverDone");
+    if (!stillWaiting) {
+        [self gameOverDone];
+    }
 }
 
 

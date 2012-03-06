@@ -52,7 +52,6 @@
 }
 
 - (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    CCLOG(@"Touched, gameOverDone");
     [self startGame]; 
 }
 

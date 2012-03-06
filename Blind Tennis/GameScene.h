@@ -13,11 +13,13 @@
 @interface GameScene : CCLayer {   
     int w,h;
     
+    float w2;
+    
     CCLabelTTF *labelLives, *labelLevel, *labelPoints;
     int lives, level; 
     float levelChangeCounter;
     
-    bool gameRunning;
+    bool gameRunning, movingLeft, movingRight;
     
     b2World *_world;
     
@@ -34,7 +36,7 @@
     
     b2MouseJoint *_mouseJoint;
     
-    b2BodyDef ballBodyDef;
+    b2BodyDef ballBodyDef, paddleBodyDef;
     b2Vec2 forceOnBall;
     
     CCSprite *curtain,*highlightCircleSprite;

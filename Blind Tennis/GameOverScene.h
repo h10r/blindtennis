@@ -16,6 +16,8 @@
     NSMutableArray *scoresArray;
     
     int _newScore;
+    
+    bool stillWaiting;
 
 }
 

@@ -31,6 +31,8 @@
         h = winSize.height;
         w = winSize.width;
         
+        w2 = w / 2.0f;
+        
         lives = 3;
         level = 0;
         levelChangeCounter = 0.0f;
@@ -164,7 +166,6 @@
         [self addChild:paddle z:-5];
         
         // Create paddle body
-        b2BodyDef paddleBodyDef;
         paddleBodyDef.type = b2_dynamicBody;
         paddleBodyDef.position.Set(winSize.width/2/PTM_RATIO, 50/PTM_RATIO);
         paddleBodyDef.userData = paddle;
@@ -179,8 +180,8 @@
         b2FixtureDef paddleShapeDef;
         paddleShapeDef.shape = &paddleShape;
         paddleShapeDef.density = 10.0f;
-        paddleShapeDef.friction = 0.4f;
-        paddleShapeDef.restitution = 0.0f;
+        paddleShapeDef.friction = 0.2f;
+        paddleShapeDef.restitution = 0.1f;
         
         _paddleFixture = _paddleBody->CreateFixture(&paddleShapeDef);
             
@@ -223,6 +224,9 @@
         points = 0;
         
         gameRunning = true;
+        
+        movingLeft = false;
+        movingRight = false;
     }
     return self;
 }
@@ -258,11 +262,29 @@
         
     forceOnBall.Set( 3.0f*[self randomFloatBetween:0.4f andBigNumber:1.0f includingNegative:true], 2.0f*[self randomFloatBetween:0.5f andBigNumber:1.0f  includingNegative:false] );
     _ballBody->ApplyLinearImpulse(forceOnBall, ballBodyDef.position);     
+    
+    b2Vec2 newVelocity = _ballBody->GetLinearVelocity();
+    float speed = newVelocity.Length();
+    
+    //CCLOG(@"%f", newVelocity.x);
+    
+    if (speed < 2.5f || newVelocity.x < 1.0f) {
+        [self teleportBall];
+        //CCLOG(@"%f", speed);
+    }
 }
 
 - (void)tick:(ccTime) dt {
     
     CGPoint ballPoint,paddlePoint;
+    
+    if (movingLeft) {
+        _paddleBody->ApplyLinearImpulse(b2Vec2(-2.0f, 0.0f), paddleBodyDef.position );
+    }
+    
+    if (movingRight) {
+        _paddleBody->ApplyLinearImpulse(b2Vec2(2.0f, 0.0f), paddleBodyDef.position );
+    }
     
     _world->Step(dt, 1, 1);    
     for(b2Body *b = _world->GetBodyList(); b; b=b->GetNext()) {    
@@ -273,7 +295,8 @@
             sprite.rotation = -1 * CC_RADIANS_TO_DEGREES(b->GetAngle());
             
             if (sprite.tag == 1) {
-                int maxSpeed = 9;
+                const int maxSpeed = 8;
+                const int minSpeed = 3;
                 
                 ballPoint = sprite.position;
                 
@@ -282,12 +305,16 @@
 
                 //CCLOG(@"%f", speed);
                 
+                if (minSpeed >= speed) {
+                    b2Vec2 newVelocity = _ballBody->GetLinearVelocity();
+                    _paddleBody->ApplyLinearImpulse( b2Vec2(newVelocity.x * 1.1f, newVelocity.y * 1.1f) , paddleBodyDef.position );
+                }
+                
                 if (speed > maxSpeed) {
-                    b->SetLinearDamping(0.8);
+                    b->SetLinearDamping(0.9);
                 } else if (speed < maxSpeed) {
                     b->SetLinearDamping(0.0);
                 }
-                
             }
             
             if (sprite.tag == 2) {
@@ -311,9 +338,13 @@
         if ( prevLevel < level ) {
             [[SimpleAudioEngine sharedEngine] playEffect:@"level_up.aiff" pitch:1.0f pan:0.0 gain:1.0f];
             
-            id actionMove = [CCMoveTo actionWithDuration:1.5f 
-                                                position:ccp(curtain.position.x, curtain.position.y - 20)];
-            [curtain runAction:[CCSequence actions:actionMove, nil]];
+            if (curtain.position.y >= 315) {
+                id actionMove = [CCMoveTo actionWithDuration:1.5f 
+                                                    position:ccp(curtain.position.x, curtain.position.y - 30)]; // 20 org, 315 is limit
+                [curtain runAction:[CCSequence actions:actionMove, nil]];
+            }
+            
+            CCLOG(@"%f", curtain.position.y);
         }
         
         pointsTimer = 0;
@@ -417,62 +448,31 @@
 }
 
 - (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    
-    if (_mouseJoint != NULL) return;
-    
     UITouch *myTouch = [touches anyObject];
     CGPoint location = [myTouch locationInView:[myTouch view]];
     location = [[CCDirector sharedDirector] convertToGL:location];
-    b2Vec2 locationWorld = b2Vec2(location.x/PTM_RATIO, location.y/PTM_RATIO);
     
-    paddleShape.SetAsBox(paddle.contentSize.width/PTM_RATIO/2 * 2.0f, 
-                         paddle.contentSize.height/PTM_RATIO/2 * 2.0f);
-    
-    if (_paddleFixture->TestPoint(locationWorld)) {
-        b2MouseJointDef md;
-        md.bodyA = _groundBody;
-        md.bodyB = _paddleBody;
-        md.target = locationWorld;
-        md.collideConnected = true;
-        md.maxForce = 100.0f * _paddleBody->GetMass();
-        
-        _mouseJoint = (b2MouseJoint *)_world->CreateJoint(&md);
-        _paddleBody->SetAwake(true);
+    if (location.x < w2) {
+        movingLeft = true;
+        movingRight = false;
+    } else { 
+        movingRight = true;
+        movingLeft = false;
     }
 }
 
 -(void)ccTouchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     
-    if (_mouseJoint == NULL) return;
-    
-    UITouch *myTouch = [touches anyObject];
-    CGPoint location = [myTouch locationInView:[myTouch view]];
-    location = [[CCDirector sharedDirector] convertToGL:location];
-    b2Vec2 locationWorld = b2Vec2(location.x/PTM_RATIO, location.y/PTM_RATIO);
-    
-    _mouseJoint->SetTarget(locationWorld);
-    
 }
 
 -(void)ccTouchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (_mouseJoint) {
-        _world->DestroyJoint(_mouseJoint);
-        _mouseJoint = NULL;
-    }
-    
-    paddleShape.SetAsBox(paddle.contentSize.width/PTM_RATIO/2, 
-                         paddle.contentSize.height/PTM_RATIO/2);
-    
+    movingLeft = false;
+    movingRight = false;
 }
 
 - (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (_mouseJoint) {
-        _world->DestroyJoint(_mouseJoint);
-        _mouseJoint = NULL;
-    }  
-    
-    paddleShape.SetAsBox(paddle.contentSize.width/PTM_RATIO/2, 
-                         paddle.contentSize.height/PTM_RATIO/2);
+    movingLeft = false;
+    movingRight = false;
 }
 
 - (void)dealloc {
