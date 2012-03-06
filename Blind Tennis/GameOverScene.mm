@@ -2,9 +2,7 @@
 //  GameOverScene.m
 //  Cocos2DSimpleGame
 //
-//  Created by Ray Wenderlich on 2/10/10.
-//  Copyright 2010 Ray Wenderlich. All rights reserved.
-//
+
 
 #import "GameOverScene.h"
 #import "GameScene.h"
@@ -44,10 +42,10 @@
         if (standardUserDefaults) {
             scoresArray = [[NSMutableArray alloc] initWithArray:[standardUserDefaults objectForKey:@"highscore"]];
             
-            CCLOG(@"-- Read highscore from stndardUserDefaults");
+            //CCLOG(@"-- Read highscore from stndardUserDefaults");
             
             if (scoresArray == nil) {
-                CCLOG(@"-- Created new NSUserDefaults shit");
+                //CCLOG(@"-- Created new NSUserDefaults shit");
                 scoresArray = [[NSMutableArray alloc] init];
             }
         }
@@ -71,8 +69,8 @@
         
         //self.label = [CCLabelTTF labelWithString:@"" fontName:@"Helvetica" fontSize:14 ];
         self.label = [CCLabelTTF labelWithString:@"" dimensions:CGSizeMake(200,260) alignment:UITextAlignmentCenter fontName:@"HelveticaNeue-CondensedBlack" fontSize:32];
-        //_label.color = ccc3(255,255,255);
-        _label.color = ccc3(0,0,0);
+        _label.color = ccc3(255,255,255);
+        //_label.color = ccc3(0,0,0);
         _label.position = ccp(winSize.width/2, winSize.height - 230);
         [self addChild:_label];
         
@@ -94,7 +92,7 @@
     if (standardUserDefaults) {
         [standardUserDefaults setObject:myArray forKey:@"highscore"];
         [standardUserDefaults synchronize];
-        CCLOG(@"-- SAVED highscore to file");
+        //CCLOG(@"-- SAVED highscore to file");
     }
 }
 
@@ -132,7 +130,7 @@
         int obj = [ [scoresArray objectAtIndex:i] integerValue];
         
         [highscores appendFormat:@"%d: %d\n", i+1, obj ];
-        CCLOG(@"-- %d",obj);
+        //CCLOG(@"-- %d",obj);
     }
     
     [_label setString:highscores ];

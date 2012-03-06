@@ -338,7 +338,7 @@
         if ( prevLevel < level ) {
             [[SimpleAudioEngine sharedEngine] playEffect:@"level_up.aiff" pitch:1.0f pan:0.0 gain:1.0f];
             
-            if (curtain.position.y >= 315) {
+            if (curtain.position.y > 315) {
                 id actionMove = [CCMoveTo actionWithDuration:1.5f 
                                                     position:ccp(curtain.position.x, curtain.position.y - 30)]; // 20 org, 315 is limit
                 [curtain runAction:[CCSequence actions:actionMove, nil]];
