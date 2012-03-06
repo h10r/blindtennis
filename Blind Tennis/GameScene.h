@@ -25,7 +25,10 @@
     
     b2Fixture *_bottomFixture;
     b2Fixture *_ballFixture;
+    
+    CCSprite *paddle;
     b2Fixture *_paddleFixture;
+    b2PolygonShape paddleShape;
     
     b2Fixture *_ballsLastContactFixture;
     

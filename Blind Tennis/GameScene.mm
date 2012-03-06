@@ -158,7 +158,7 @@
         */
          
         // Create paddle and add it to the layer
-        CCSprite *paddle = [CCSprite spriteWithFile:@"paddle.png"];
+        paddle = [CCSprite spriteWithFile:@"paddle.png"];
         paddle.position = ccp(winSize.width/2, 50);
         paddle.tag = 2;
         [self addChild:paddle z:-5];
@@ -170,19 +170,22 @@
         paddleBodyDef.userData = paddle;
         _paddleBody = _world->CreateBody(&paddleBodyDef);
         
-        // Create paddle shape
-        b2PolygonShape paddleShape;
+        // ---------------------------------------------------------------
+        
+        // paddle shape
         paddleShape.SetAsBox(paddle.contentSize.width/PTM_RATIO/2, 
                              paddle.contentSize.height/PTM_RATIO/2);
         
-        // Create shape definition and add to body
         b2FixtureDef paddleShapeDef;
         paddleShapeDef.shape = &paddleShape;
         paddleShapeDef.density = 10.0f;
         paddleShapeDef.friction = 0.4f;
         paddleShapeDef.restitution = 0.0f;
-        _paddleFixture = _paddleBody->CreateFixture(&paddleShapeDef);
         
+        _paddleFixture = _paddleBody->CreateFixture(&paddleShapeDef);
+            
+        // ---------------------------------------------------------------
+                
         b2PrismaticJointDef jointDef;
         b2Vec2 worldAxis(1.0f, 0.0f);
         jointDef.collideConnected = true;
@@ -194,6 +197,21 @@
         _contactListener = new MyContactListener();
         _world->SetContactListener(_contactListener);
         
+        
+        // add buttons
+        CCSprite *arrowLeft = [CCSprite spriteWithFile:@"arrow-left.png" 
+                                             rect:CGRectMake(0, 0, 33, 33)];
+        arrowLeft.position = ccp(40, 31);
+        arrowLeft.tag = 11;
+        [self addChild:arrowLeft z:-42];
+        
+        CCSprite *arrowRight = [CCSprite spriteWithFile:@"arrow-right.png" 
+                                                  rect:CGRectMake(0, 0, 33, 33)];
+        arrowRight.position = ccp(w-40, 31);
+        arrowRight.tag = 11;
+        [self addChild:arrowRight z:-42];
+        
+        // set variables and timer
         [self schedule:@selector(tick:)];
         
         soundTimer = 0; 
@@ -324,7 +342,7 @@
     for(pos = _contactListener->_contacts.begin(); pos != _contactListener->_contacts.end(); ++pos) {
         MyContact contact = *pos;
         
-        if (contact.fixtureA == _ballsLastContactFixture || contact.fixtureB == _ballsLastContactFixture ) {
+        if ( contact.fixtureA == _ballsLastContactFixture || contact.fixtureB == _ballsLastContactFixture ) {
             //CCLOG(@"*** avoided double detection");
             continue;
         }
@@ -407,6 +425,9 @@
     location = [[CCDirector sharedDirector] convertToGL:location];
     b2Vec2 locationWorld = b2Vec2(location.x/PTM_RATIO, location.y/PTM_RATIO);
     
+    paddleShape.SetAsBox(paddle.contentSize.width/PTM_RATIO/2 * 2.0f, 
+                         paddle.contentSize.height/PTM_RATIO/2 * 2.0f);
+    
     if (_paddleFixture->TestPoint(locationWorld)) {
         b2MouseJointDef md;
         md.bodyA = _groundBody;
@@ -434,11 +455,13 @@
 }
 
 -(void)ccTouchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    
     if (_mouseJoint) {
         _world->DestroyJoint(_mouseJoint);
         _mouseJoint = NULL;
     }
+    
+    paddleShape.SetAsBox(paddle.contentSize.width/PTM_RATIO/2, 
+                         paddle.contentSize.height/PTM_RATIO/2);
     
 }
 
@@ -447,6 +470,9 @@
         _world->DestroyJoint(_mouseJoint);
         _mouseJoint = NULL;
     }  
+    
+    paddleShape.SetAsBox(paddle.contentSize.width/PTM_RATIO/2, 
+                         paddle.contentSize.height/PTM_RATIO/2);
 }
 
 - (void)dealloc {
