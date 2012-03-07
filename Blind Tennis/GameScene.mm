@@ -275,7 +275,7 @@
 }
 
 - (void)tick:(ccTime) dt {
-    
+        
     CGPoint ballPoint,paddlePoint;
     
     if (movingLeft) {

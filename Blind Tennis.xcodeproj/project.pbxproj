@@ -1421,7 +1421,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Hendrik Heuer (4J4VG75395)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Hendrik Heuer (4J4VG75395)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1432,7 +1433,9 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				PROVISIONING_PROFILE = "0C3E9618-440C-4177-B3A1-FFC6CB5B27BD";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0C3E9618-440C-4177-B3A1-FFC6CB5B27BD";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1441,14 +1444,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Hendrik Heuer (4J4VG75395)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Hendrik Heuer (4J4VG75395)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "0C3E9618-440C-4177-B3A1-FFC6CB5B27BD";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0C3E9618-440C-4177-B3A1-FFC6CB5B27BD";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
@@ -1461,8 +1467,9 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blind Tennis/Prefix.pch";
-				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				"GCC_THUMB_SUPPORT[arch=armv6]" = YES;
 				INFOPLIST_FILE = "Blind Tennis/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "\"Blind Tennis/libs\"";
@@ -1477,8 +1484,9 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blind Tennis/Prefix.pch";
-				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				"GCC_THUMB_SUPPORT[arch=armv6]" = YES;
 				INFOPLIST_FILE = "Blind Tennis/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "\"Blind Tennis/libs\"";
