@@ -1200,7 +1200,7 @@
 		9780FE12150632F300FB9B20 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = 9780FE15150632F300FB9B20 /* Build configuration list for PBXProject "Blind Tennis" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1468,6 +1468,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blind Tennis/Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Blind Tennis/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lz";
@@ -1485,6 +1486,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Blind Tennis/Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Blind Tennis/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lz";

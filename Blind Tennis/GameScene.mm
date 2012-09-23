@@ -303,7 +303,7 @@
                 b2Vec2 velocity = b->GetLinearVelocity();
                 float32 speed = velocity.Length();
 
-                //CCLOG(@"%f", speed);
+                CCLOG(@"%f", speed);
                 
                 if (minSpeed >= speed) {
                     b2Vec2 newVelocity = _ballBody->GetLinearVelocity();
